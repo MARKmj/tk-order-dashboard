@@ -1,0 +1,13 @@
+{
+  "name": "tk-order-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "check": "node --check lib/dashboard.js && node --check api/index.js && node --check api/refresh.js && node --check api/auth.js",
+    "smoke": "node lib/dashboard.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

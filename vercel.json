@@ -1,0 +1,17 @@
+{
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/tk-order-dashboard.html",
+      "destination": "/api/index"
+    }
+  ]
+}
