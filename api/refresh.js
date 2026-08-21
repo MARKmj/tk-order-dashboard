@@ -12,6 +12,7 @@ module.exports = async function handler(req, res) {
     res.setHeader("cache-control", "no-store");
     res.status(200).json({
       ok: true,
+      payload,
       records: payload.source.records,
       generatedAt: payload.generatedAt
     });
