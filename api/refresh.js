@@ -1,4 +1,4 @@
-const { loadPayload } = require("../lib/dashboard");
+const { loadPayload, verifyProjectCode } = require("../lib/dashboard");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -8,7 +8,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const payload = await loadPayload();
+    const projectId = req.query?.project || "main";
+    const code = req.headers["x-dashboard-code"];
+    const auth = verifyProjectCode(projectId, code);
+    if (!auth.ok) {
+      res.status(auth.status).json({ ok: false, error: auth.error });
+      return;
+    }
+    const payload = await loadPayload(projectId);
     res.setHeader("cache-control", "no-store");
     res.status(200).json({
       ok: true,
