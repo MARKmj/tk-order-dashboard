@@ -11,8 +11,10 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `FEISHU_BASE_TOKEN`
 - `FEISHU_TABLE_ID`
 - `FEISHU_MAIN_VIEW_ID`
+- `FEISHU_PROJECT_110_VIEW_ID`
 - `FEISHU_GUANGXI_VIEW_ID`
 - `DASHBOARD_ACCESS_CODE_MAIN`
+- `DASHBOARD_ACCESS_CODE_PROJECT_110`
 - `DASHBOARD_ACCESS_CODE_GUANGXI`
 
 Do not commit real secrets to GitHub.
