@@ -30,8 +30,10 @@ module.exports = async function handler(req, res) {
   }
 
   const startedAt = new Date().toISOString();
+  const selectedProject = req.query?.project;
+  const targetProjectIds = selectedProject ? [selectedProject] : projectIds();
   const results = [];
-  for (const projectId of projectIds()) {
+  for (const projectId of targetProjectIds) {
     try {
       results.push({ ok: true, ...(await syncProject(projectId)) });
     } catch (error) {

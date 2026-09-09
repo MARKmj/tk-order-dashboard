@@ -8,6 +8,10 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [main, project110, guangxi]
     steps:
       - name: Trigger Feishu snapshot sync
         run: |
@@ -16,7 +20,7 @@ jobs:
             --header "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             --output response.json \
             --write-out "%{http_code}" \
-            https://vercel-tk-order-dashboard.vercel.app/api/cron-sync)
+            "https://vercel-tk-order-dashboard.vercel.app/api/cron-sync?project=${{ matrix.project }}")
           cat response.json
           echo
           if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
