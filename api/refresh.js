@@ -24,6 +24,11 @@ module.exports = async function handler(req, res) {
       generatedAt: payload.generatedAt
     });
   } catch (error) {
-    res.status(500).json({ ok: false, error: error.message });
+    const retryable = /Data not ready|try again later|timeout/i.test(error.message || "");
+    res.status(retryable ? 503 : 500).json({
+      ok: false,
+      retryable,
+      error: retryable ? "飞书数据正在计算或接口响应较慢，请稍后重新刷新" : error.message
+    });
   }
 };
