@@ -23,6 +23,7 @@ jobs:
             "https://vercel-tk-order-dashboard.vercel.app/api/cron-sync?project=${{ matrix.project }}")
           cat response.json
           echo
+          node -e "const r=require('./response.json'); if (!r.ok) process.exit(1)"
           if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
             echo "Sync request failed with HTTP $status"
             exit 1

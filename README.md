@@ -19,6 +19,7 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `CRON_SECRET`
 - `BLOB_READ_WRITE_TOKEN`
 - `DASHBOARD_CACHE_PREFIX`
+- `DASHBOARD_CACHE_SECRET`
 
 Do not commit real secrets to GitHub.
 
@@ -26,12 +27,12 @@ Do not commit real secrets to GitHub.
 
 The dashboard is optimized for fast loading through server-side snapshots:
 
-- `/api/cron-sync` syncs all projects from Feishu into Vercel Blob. Vercel Cron calls it with `Authorization: Bearer $CRON_SECRET`.
+- `/api/cron-sync` syncs Feishu data into encrypted Vercel Blob snapshots. GitHub Actions calls it with `Authorization: Bearer $CRON_SECRET`.
 - `/api/refresh?project=main` validates the project card code, then reads the latest server snapshot. It does not call Feishu during normal dashboard refreshes.
 - `/api/sync?project=main` validates the project card code and manually syncs that project from Feishu into the cache.
 - Local development stores snapshots under `.cache/` when `BLOB_READ_WRITE_TOKEN` is not configured.
 
-The cron schedule is set to every 2 hours in `vercel.json`. Vercel Hobby plans may only allow daily cron frequency; use Pro or an external scheduler if the two-hour cadence does not run.
+The sync schedule is handled by `.github/workflows/sync-cache.yml` every 2 hours because Vercel Hobby plans do not allow two-hour Vercel Cron frequency. Snapshots are encrypted before writing to Blob; set `DASHBOARD_CACHE_SECRET` to use a dedicated cache key, otherwise the server falls back to existing server secrets.
 
 ## Local Check
 
