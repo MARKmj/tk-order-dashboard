@@ -1,0 +1,17 @@
+name: Sync dashboard cache
+
+on:
+  schedule:
+    - cron: "0 */2 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Feishu snapshot sync
+        run: |
+          curl --fail --show-error --silent \
+            --request POST \
+            --header "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://vercel-tk-order-dashboard.vercel.app/api/cron-sync

@@ -16,8 +16,22 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `DASHBOARD_ACCESS_CODE_MAIN`
 - `DASHBOARD_ACCESS_CODE_PROJECT_110`
 - `DASHBOARD_ACCESS_CODE_GUANGXI`
+- `CRON_SECRET`
+- `BLOB_READ_WRITE_TOKEN`
+- `DASHBOARD_CACHE_PREFIX`
 
 Do not commit real secrets to GitHub.
+
+## Cached Loading
+
+The dashboard is optimized for fast loading through server-side snapshots:
+
+- `/api/cron-sync` syncs all projects from Feishu into Vercel Blob. Vercel Cron calls it with `Authorization: Bearer $CRON_SECRET`.
+- `/api/refresh?project=main` validates the project card code, then reads the latest server snapshot. It does not call Feishu during normal dashboard refreshes.
+- `/api/sync?project=main` validates the project card code and manually syncs that project from Feishu into the cache.
+- Local development stores snapshots under `.cache/` when `BLOB_READ_WRITE_TOKEN` is not configured.
+
+The cron schedule is set to every 2 hours in `vercel.json`. Vercel Hobby plans may only allow daily cron frequency; use Pro or an external scheduler if the two-hour cadence does not run.
 
 ## Local Check
 
@@ -30,4 +44,6 @@ npm run smoke
 
 - `/` renders the project portal and dashboard shell.
 - `/api/auth` validates the selected project's access code.
-- `/api/refresh?project=main` reloads the selected Feishu Base view after validating that project's access code.
+- `/api/refresh?project=main` reads the selected project's cached snapshot after validating that project's access code.
+- `/api/sync?project=main` manually refreshes the selected project's cached snapshot from Feishu.
+- `/api/cron-sync` refreshes all project snapshots for scheduled background sync.
