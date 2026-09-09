@@ -7,6 +7,10 @@ async function syncProject(projectId) {
   return statusFromSnapshot(snapshot);
 }
 
+function cleanSecret(value) {
+  return String(value || "").trim().replace(/^['"]|['"]$/g, "");
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "GET" && req.method !== "POST") {
     res.setHeader("allow", "GET, POST");
@@ -14,13 +18,13 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const expected = process.env.CRON_SECRET;
-  const auth = req.headers.authorization;
+  const expected = cleanSecret(process.env.CRON_SECRET);
+  const auth = cleanSecret(String(req.headers.authorization || "").replace(/^Bearer\s+/i, ""));
   if (!expected) {
     res.status(500).json({ ok: false, error: "服务端未配置 CRON_SECRET" });
     return;
   }
-  if (auth !== `Bearer ${expected}`) {
+  if (auth !== expected) {
     res.status(401).json({ ok: false, error: "unauthorized" });
     return;
   }
