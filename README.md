@@ -20,6 +20,7 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `BLOB_READ_WRITE_TOKEN`
 - `DASHBOARD_CACHE_PREFIX`
 - `DASHBOARD_CACHE_SECRET`
+- `DASHBOARD_TIME_ZONE`
 
 Do not commit real secrets to GitHub.
 
@@ -33,6 +34,8 @@ The dashboard is optimized for fast loading through server-side snapshots:
 - Local development stores snapshots under `.cache/` when `BLOB_READ_WRITE_TOKEN` is not configured.
 
 The sync schedule is handled by `.github/workflows/sync-cache.yml` every 2 hours because Vercel Hobby plans do not allow two-hour Vercel Cron frequency. Snapshots are encrypted before writing to Blob; set `DASHBOARD_CACHE_SECRET` to use a dedicated cache key, otherwise the server falls back to existing server secrets.
+
+Order dates and fallback hours are grouped with `DASHBOARD_TIME_ZONE`, defaulting to `Asia/Shanghai`, so Vercel's UTC runtime does not shift Feishu order timestamps into the wrong day.
 
 ## Local Check
 
