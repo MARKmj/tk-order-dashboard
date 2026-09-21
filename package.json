@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vercel dev",
-    "check": "node --check lib/dashboard.js && node --check lib/cache.js && node --check api/index.js && node --check api/refresh.js && node --check api/auth.js && node --check api/sync.js && node --check api/cron-sync.js",
+    "check": "node --check lib/dashboard.js && node --check lib/cache.js && node --check lib/product-translations.js && node --check api/index.js && node --check api/refresh.js && node --check api/auth.js && node --check api/sync.js && node --check api/cron-sync.js",
     "smoke": "node lib/dashboard.js"
   },
   "engines": {

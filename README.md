@@ -21,6 +21,12 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `DASHBOARD_CACHE_PREFIX`
 - `DASHBOARD_CACHE_SECRET`
 - `DASHBOARD_TIME_ZONE`
+- `PRODUCT_TRANSLATION_ENABLED`
+- `PRODUCT_TRANSLATION_API_KEY`
+- `PRODUCT_TRANSLATION_BASE_URL`
+- `PRODUCT_TRANSLATION_MODEL`
+- `PRODUCT_TRANSLATION_BATCH_SIZE`
+- `PRODUCT_TRANSLATION_SYNC_LIMIT`
 
 Do not commit real secrets to GitHub.
 
@@ -36,6 +42,12 @@ The dashboard is optimized for fast loading through server-side snapshots:
 The sync schedule is handled by `.github/workflows/sync-cache.yml` every 2 hours because Vercel Hobby plans do not allow two-hour Vercel Cron frequency. Snapshots are encrypted before writing to Blob; set `DASHBOARD_CACHE_SECRET` to use a dedicated cache key, otherwise the server falls back to existing server secrets.
 
 Order dates and fallback hours are grouped with `DASHBOARD_TIME_ZONE`, defaulting to `Asia/Shanghai`, so Vercel's UTC runtime does not shift Feishu order timestamps into the wrong day.
+
+## Product Translation Cache
+
+During `/api/cron-sync` and `/api/sync`, the server builds a shared product translation cache. If `PRODUCT_TRANSLATION_API_KEY` is configured, new or Feishu-seeded products are translated into short Chinese ecommerce titles and saved for reuse. If the key is not configured, the dashboard keeps working by falling back to `商品名称-中文`, then the original product name or ID.
+
+`PRODUCT_TRANSLATION_BASE_URL` uses the OpenAI-compatible chat completions API format. Keep `PRODUCT_TRANSLATION_SYNC_LIMIT` modest so scheduled syncs translate new products gradually instead of slowing the whole dashboard.
 
 ## Local Check
 
