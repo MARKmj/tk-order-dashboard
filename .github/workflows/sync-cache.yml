@@ -13,18 +13,29 @@ jobs:
       matrix:
         project: [main, project110, guangxi]
     steps:
-      - name: Trigger Feishu snapshot sync
-        run: |
-          status=$(curl --show-error --silent \
-            --request POST \
-            --header "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            --output response.json \
-            --write-out "%{http_code}" \
-            "https://vercel-tk-order-dashboard.vercel.app/api/cron-sync?project=${{ matrix.project }}")
-          cat response.json
-          echo
-          node -e "const r=require('./response.json'); if (!r.ok) process.exit(1)"
-          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
-            echo "Sync request failed with HTTP $status"
-            exit 1
-          fi
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync Feishu snapshot to Blob
+        run: node scripts/sync-cache.js "${{ matrix.project }}"
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          FEISHU_BASE_TOKEN: ${{ secrets.FEISHU_BASE_TOKEN }}
+          FEISHU_TABLE_ID: ${{ secrets.FEISHU_TABLE_ID }}
+          FEISHU_MAIN_VIEW_ID: ${{ secrets.FEISHU_MAIN_VIEW_ID }}
+          FEISHU_PROJECT_110_VIEW_ID: ${{ secrets.FEISHU_PROJECT_110_VIEW_ID }}
+          FEISHU_GUANGXI_VIEW_ID: ${{ secrets.FEISHU_GUANGXI_VIEW_ID }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          DASHBOARD_CACHE_SECRET: ${{ secrets.DASHBOARD_CACHE_SECRET }}
+          DASHBOARD_CACHE_PREFIX: tk-order-dashboard
+          DASHBOARD_TIME_ZONE: Asia/Shanghai
+          PRODUCT_TRANSLATION_ENABLED: "true"
+          PRODUCT_TRANSLATION_SYNC_LIMIT: "0"

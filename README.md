@@ -27,6 +27,7 @@ Set these in Vercel Project Settings -> Environment Variables:
 - `PRODUCT_TRANSLATION_MODEL`
 - `PRODUCT_TRANSLATION_BATCH_SIZE`
 - `PRODUCT_TRANSLATION_SYNC_LIMIT`
+- `PRODUCT_TRANSLATION_TIMEOUT_MS`
 
 Do not commit real secrets to GitHub.
 
