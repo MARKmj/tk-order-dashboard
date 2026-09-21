@@ -8,6 +8,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -32,6 +33,8 @@ jobs:
           FEISHU_MAIN_VIEW_ID: ${{ secrets.FEISHU_MAIN_VIEW_ID }}
           FEISHU_PROJECT_110_VIEW_ID: ${{ secrets.FEISHU_PROJECT_110_VIEW_ID }}
           FEISHU_GUANGXI_VIEW_ID: ${{ secrets.FEISHU_GUANGXI_VIEW_ID }}
+          FEISHU_PAGE_TIMEOUT_MS: "45000"
+          FEISHU_PAGE_MAX_ATTEMPTS: "3"
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           DASHBOARD_CACHE_SECRET: ${{ secrets.DASHBOARD_CACHE_SECRET }}
@@ -44,4 +47,4 @@ jobs:
           PRODUCT_TRANSLATION_BATCH_SIZE: ${{ secrets.PRODUCT_TRANSLATION_BATCH_SIZE }}
           PRODUCT_TRANSLATION_TIMEOUT_MS: ${{ secrets.PRODUCT_TRANSLATION_TIMEOUT_MS }}
           PRODUCT_TRANSLATION_SYNC_LIMIT: "80"
-          SYNC_MAX_ATTEMPTS: "5"
+          SYNC_MAX_ATTEMPTS: "8"
