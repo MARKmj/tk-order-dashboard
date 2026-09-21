@@ -39,3 +39,4 @@ jobs:
           DASHBOARD_TIME_ZONE: Asia/Shanghai
           PRODUCT_TRANSLATION_ENABLED: "true"
           PRODUCT_TRANSLATION_SYNC_LIMIT: "0"
+          SYNC_MAX_ATTEMPTS: "5"
